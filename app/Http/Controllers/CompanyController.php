@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Models\Send;
 use App\Service\ModmeService;
 
 class CompanyController extends Controller
@@ -31,9 +32,15 @@ class CompanyController extends Controller
 
             if($company){
 
+                $sends = Send::query()->where('modme_company_id', $company_id)->get();
                 $filails = $this->modmeService->checkCompany($token);
 
-                return view('welcome')->with('token', $token);
+                if($sends){
+                    return view('welcome', compact('token', 'sends'));
+                }else{
+                    return view('welcome', compact('token'));
+                }
+
             }else{
                 return view('tariff', compact('token', 'company_id'));
             }
@@ -57,7 +64,6 @@ class CompanyController extends Controller
             $tokenInfo = $this->modmeService->checkToken($token);
 
             if($tokenInfo['data']['company']['id']){
-
                 $company_id = $tokenInfo['data']['company']['id'];
                 $company_name = $tokenInfo['data']['company']['name'];
 
@@ -67,6 +73,7 @@ class CompanyController extends Controller
                     'modme_token' => $token,
                     'tariff' => $tariff
                 ]);
+
                 return redirect()->route('create')->with('token', $token);
             }else{
                 return "Company ID xato";

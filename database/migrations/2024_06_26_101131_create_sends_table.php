@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('sends', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('schedule_id');
-            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->text('message');
+            $table->string('schedule_id_1');
+            $table->time('send_time');
+            $table->string('schedule_id_3');
             $table->string('params')->nullable();
+            $table->string('modme_company_id');
             $table->timestamps();
         });
     }

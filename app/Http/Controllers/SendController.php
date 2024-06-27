@@ -5,29 +5,56 @@ namespace App\Http\Controllers;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Models\Send;
+use App\Service\ModmeService;
 
 class SendController extends Controller
 {
-    public function showForm()
+    private ModmeService $modmeService;
+
+    public function __construct(ModmeService $modmeService)
     {
-        $schedules = Schedule::all();
-        $sends = Send::all();
-        return view('welcome', compact('schedules', 'sends'));
+        $this->modmeService = $modmeService;
     }
 
     public function sendSms(Request $request){
 
-        dd($request);
-
         $data = $request->validate([
-            'schedule_id' => 'required',
             'message' => 'required|string',
+            'schedule_id_1' => 'required',
+            'send_time' => 'nullable',
+            'schedule_id_3' => 'required',
             'params' => 'nullable'
         ]);
 
-        Send::create($data);
+        $token = $request->input('token');
+        $company = $this->modmeService->checkToken($token);
+        $company_id = $company['data']['company']['id'];
+        $data['modme_company_id']  = $company_id;
 
-        return redirect(route('sms.form'));
+        $a = $data['schedule_id_1'];
+
+        if($a === 1){
+            Schedule::create([
+                'name' => $data['message'],
+                'frequency' => 'dailyAt',
+                'params' => $data['send_time']
+            ]);
+        }elseif($a === 2){
+            Schedule::create([
+                'name' => $data['message'],
+                'frequency' => 'dailyAt',
+                'params' => $data['send_time']
+            ]);
+        }else{
+            Schedule::create([
+                'name' => $data['message'],
+                'frequency' => 'dailyAt',
+                'params' => $data['send_time']
+            ]);
+        }
+
+        Send::create($data);
+        return redirect(route('create'))->with('token');
 
     }
 }

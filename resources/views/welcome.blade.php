@@ -35,7 +35,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Send SMS</h5>
-                        <form action="{{ route('send.sms') }}" method="POST">
+                        <form action="{{ route('send.sms', ['token' => $token]) }}" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="message" class="form-label">Xabar:</label>
@@ -44,7 +44,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label for="schedule_id" class="form-label">Schedule:</label>
+                                        <label for="schedule_id" class="form-label">Qachon:</label>
                                         <select id="schedule_id" name="schedule_id_1" class="form-select">
                                             <option value="1">Har kuni</option>
                                             <option value="2">Dars kuni</option>
@@ -53,16 +53,16 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="col-md-12 time-label">
-                                            <label for="send_time" class="form-label">Time: AM/PM</label>
+                                            <label for="send_time" class="form-label">Vaqt: AM/PM</label>
                                             <input type="time" id="send_time" name="send_time" class="form-control" value="09:00">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="schedule_id_3" class="form-label">Schedule 3:</label>
+                                        <label for="schedule_id_3" class="form-label">Kimga:</label>
                                         <select id="schedule_id_3" name="schedule_id_3" class="form-select">
-                                            <option value="1">Sinov mudati</option>
-                                            <option value="2">Qarizdor</option>
-                                            <option value="3">Activ</option>
+                                            <option value="Sinovdagilarga">Sinovdagilarga</option>
+                                            <option value="Qarizdorlarga">Qarizdorlarga</option>
+                                            <option value="Aktivlarga">Aktivlarga</option>
                                         </select>
                                     </div>
                                 </div>
@@ -77,15 +77,27 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Rejalashtirilgan Xabarlar</h5>
-                        @if (!empty($sends))
-                            <ul class="list-group">
-                                @foreach($sends as $send)
-                                    <li class="list-group-item">
-                                        <p>{{ $send->message }}</p>
-                                        <small>{{ $send->created_at }}</small>
-                                    </li>
-                                @endforeach
-                            </ul>
+                        @if ($sends->isNotEmpty())
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Soni</th>
+                                        <th>Xabaringiz</th>
+                                        <th>Kimga</th>
+                                        <th>Send Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($sends as $send)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $send->message }}</td>
+                                            <td>{{ $send->schedule_id_3 }}</td>
+                                            <td class="border p-1">{{ $send->send_time }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         @else
                             <p>Sizda hali rejalashtirilgan xabar yuq!</p>
                         @endif

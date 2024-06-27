@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('message');
             $table->string('frequency');
             $table->string('params')->nullable();
             $table->timestamps();

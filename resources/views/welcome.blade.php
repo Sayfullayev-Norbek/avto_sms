@@ -4,29 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Send </title>
+    <title>Send SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .btn-custom {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
-    <form action="{{ route('send.sms') }}" method="POST">
-        @csrf
-        <label for="params">SMS yuborish vaqti:</label>
-        <input type="text" id="params" name="params">
-        <br><br>
-        <label for="message">Xabar:</label><br>
-        <textarea id="message" name="message" rows="4" cols="50" required></textarea>
-        <br><br>
-        <select class="form-control" name="schedule_id">
-            @if (!empty($schedules))
-                @foreach($schedules as $sched)
-                    <option value="{{ $sched['id'] }}">{{ $sched['name'] }}</option>
-                @endforeach
-            @else
-                <option disabled selected>Sizda Filial yuq!</option>
-            @endif
-        </select>
-        <button type="submit">SMS Yuborish</button>
-    </form>
+    <div class="container">
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Send SMS</h5>
+                        <form action="{{ route('send.sms') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Xabar:</label>
+                                <textarea id="message" name="message" rows="4" class="form-control" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="schedule_id" class="form-label">Schedule:</label>
+                                        <select id="schedule_id" name="schedule_id_1" class="form-select">
+                                            <option value="1">Har kuni</option>
+                                            <option value="2">Dars kuni</option>
+                                            <option value="3">Darsdan bir kuni oldin</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="col-md-12 time-label">
+                                            <label for="send_time" class="form-label">Time: AM/PM</label>
+                                            <input type="time" id="send_time" name="send_time" class="form-control" value="09:00">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="schedule_id_3" class="form-label">Schedule 3:</label>
+                                        <select id="schedule_id_3" name="schedule_id_3" class="form-select">
+                                            <option value="1">Sinov mudati</option>
+                                            <option value="2">Qarizdor</option>
+                                            <option value="3">Activ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-custom">SMS Yuborish</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Sends Section -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Rejalashtirilgan Xabarlar</h5>
+                        @if (!empty($sends))
+                            <ul class="list-group">
+                                @foreach($sends as $send)
+                                    <li class="list-group-item">
+                                        <p>{{ $send->message }}</p>
+                                        <small>{{ $send->created_at }}</small>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>Sizda hali rejalashtirilgan xabar yuq!</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

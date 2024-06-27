@@ -185,4 +185,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'modme_API_URL' => env('MODME_API_URL', 'https://api.modme.uz'),
+
 ];

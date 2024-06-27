@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SendController;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +15,10 @@ use App\Http\Controllers\SendController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/sms', [SendController::class, 'showForm'])->name('sms.form');
+
+Route::get('/', [CompanyController::class, 'create'])->name('create');
+Route::post('/', [CompanyController::class, 'tariffStore'])->name('tariffStore');
+
+
 Route::post('/send-sms', [SendController::class, 'sendSms'])->name('send.sms');

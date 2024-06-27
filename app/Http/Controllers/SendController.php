@@ -11,11 +11,13 @@ class SendController extends Controller
     public function showForm()
     {
         $schedules = Schedule::all();
-
-        return view('welcome', compact('schedules'));
+        $sends = Send::all();
+        return view('welcome', compact('schedules', 'sends'));
     }
 
     public function sendSms(Request $request){
+
+        dd($request);
 
         $data = $request->validate([
             'schedule_id' => 'required',
@@ -25,7 +27,7 @@ class SendController extends Controller
 
         Send::create($data);
 
-        dd($data);
+        return redirect(route('sms.form'));
 
     }
 }

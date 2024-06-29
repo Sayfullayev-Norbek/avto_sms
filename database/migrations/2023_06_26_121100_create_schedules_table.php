@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('message');
             $table->string('frequency');
-            $table->string('params')->nullable();
+            $table->string('params');
+            $table->string('send_day')->nullable();
             $table->timestamps();
         });
     }

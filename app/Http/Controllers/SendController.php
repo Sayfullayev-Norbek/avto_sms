@@ -23,7 +23,8 @@ class SendController extends Controller
             'schedule_id_1' => 'required',
             'send_time' => 'nullable',
             'schedule_id_3' => 'required',
-            'params' => 'nullable'
+            'params' => 'nullable',
+            'send_day' => 'nullable'
         ]);
 
         $token = $request->input('token');
@@ -33,27 +34,30 @@ class SendController extends Controller
 
         $a = $data['schedule_id_1'];
 
-        if($a === 1){
+        if($a == 1){
             Schedule::create([
-                'name' => $data['message'],
+                'message' => $data['message'],
                 'frequency' => 'dailyAt',
                 'params' => $data['send_time']
             ]);
-        }elseif($a === 2){
+        }elseif($a == 2){
             Schedule::create([
-                'name' => $data['message'],
-                'frequency' => 'dailyAt',
-                'params' => $data['send_time']
+                'message' => $data['message'],
+                'frequency' => 'monthlyOn',
+                'params' =>$data['send_time'],
+                'send_day' => $data['send_day']
             ]);
         }else{
             Schedule::create([
-                'name' => $data['message'],
-                'frequency' => 'dailyAt',
-                'params' => $data['send_time']
+                'message' => $data['message'],
+                'frequency' => 'monthlyOn',
+                'params' =>$data['send_time'],
+                'send_day' => $data['send_day']
             ]);
         }
-
+        
         Send::create($data);
+
         return redirect(route('create'))->with('token');
 
     }

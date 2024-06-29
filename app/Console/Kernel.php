@@ -2,10 +2,10 @@
 
 namespace App\Console;
 
-use App\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Models\Send;
+use App\Models\Schedule as TaskSchedule; // Ensure you have imported the correct model
+use Illuminate\Console\View\Components\Task;
 use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
@@ -15,17 +15,35 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
-            $hozirgi_time = now()->format('H:i:s');
+        $tasks = TaskSchedule::all();
 
-            $message = Send::where('send_time', $hozirgi_time)->first();
+        foreach ($tasks as $task) {
+            
+            Log::info("Forni boshlash: {$task->id} with params: {$task->params}");
 
-            if($message){
-                Log::info("Sending SMS at $hozirgi_time  with message: {$message->message}");
+            if (is_string($task->params)) {
+
+                $params = $task->params;
+                $params = explode(",", $task->params);
+                Log::info("Qanaqa ko'rinishda params: " . json_encode($params));
+
+                if (is_array($params)) {
+                    if (!empty($task->send_day)) {
+                        $day_time = $task->send_day . "," . $task->params;
+                        $params = explode(",", $day_time);
+                        Log::info("Qanaqa ko'rinishda day time params: " . json_encode($params));
+                    }
+
+                    $schedule->call(function () use ($task) {
+                        Log::info("{$task->message} Salom " . now());
+                    })->{$task->frequency}(...$params)->name($task->message);
+                } else {
+                    Log::error("bu vazifani bajarib bo'lmadi: {$task->id}");
+                }
+            } else {
+                Log::error("{$task->id} Shu id ma'lumotlari string emas");
             }
-
-
-        })->everyMinute();
+        }
     }
 
     /**

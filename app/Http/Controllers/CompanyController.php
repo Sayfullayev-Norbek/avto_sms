@@ -34,11 +34,20 @@ class CompanyController extends Controller
 
                 $sends = Send::query()->where('modme_company_id', $company_id)->get();
                 $filails = $this->modmeService->checkCompany($token);
+                $filails = $filails['data'];
 
+                $res = [];
+                foreach($filails as $filail){
+                    $branch_id = $filail['id'];
+
+                    $response = $this->modmeService->checkGroup($branch_id, $token);
+
+                    $res[] = $response;
+                }
                 if($sends){
-                    return view('welcome', compact('token', 'sends'));
+                    return view('welcome', compact('token', 'sends', 'filails', 'res'));
                 }else{
-                    return view('welcome', compact('token'));
+                    return view('welcome', compact('token', 'filails'));
                 }
 
             }else{

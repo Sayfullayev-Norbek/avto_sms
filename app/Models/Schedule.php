@@ -9,6 +9,6 @@ class Schedule extends Model
 {
     use HasFactory;
 
-    public $fillable = ['name', 'frequency', 'params'];
+    public $fillable = ['message', 'frequency', 'params', 'send_day'];
 
 }

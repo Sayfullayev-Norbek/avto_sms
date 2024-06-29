@@ -5,6 +5,7 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Type\Integer;
 
 class ModmeService
 {
@@ -78,5 +79,28 @@ class ModmeService
             Log::error($e->getMessage());
             abort(500, $e->getMessage());
         }
+    }
+
+    public function checkGroup($branch_id, $token)
+    {
+        try{
+            $client = new Client();
+            $response = $client->get($this->modme_url."/v2/groups",[
+                'query' => [
+                    'branch_id' => $branch_id,
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+
+                ]
+            ]);
+
+            return json_decode($response->getBody()->getContents(), true);
+        }catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+            abort(500, $e->getMessage());
+        }
+
     }
 }

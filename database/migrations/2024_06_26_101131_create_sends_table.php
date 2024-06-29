@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('schedule_id_3');
             $table->string('params')->nullable();
             $table->string('modme_company_id');
+            $table->string('send_day');
             $table->timestamps();
         });
     }

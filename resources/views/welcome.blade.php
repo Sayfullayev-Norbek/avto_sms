@@ -35,6 +35,17 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Send SMS</h5>
+
+                        @if(!empty($filails))
+                            <label for="filail_id" class="form-label">Filail</label>
+                            <select id="filail_id" name="filail_id" class="form-select">
+                                @foreach ($filails as $filail)
+                                    <option value="{{ $filail['id'] }}">{{ $filail['name'] }}</option>
+                                @endforeach
+                            </select>
+                        @else
+                            <p>Sizda Filail yuq!</p>
+                        @endif
                         <form action="{{ route('send.sms', ['token' => $token]) }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -66,6 +77,12 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12 time-label">
+                                        <label for="send_day" class="form-label">Kun </label>
+                                        <input type="number" id="send_day" name="send_day" class="form-control" value="09:00">
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-custom">SMS Yuborish</button>
                         </form>
@@ -84,6 +101,7 @@
                                         <th>Soni</th>
                                         <th>Xabaringiz</th>
                                         <th>Kimga</th>
+                                        <th>Kun</th>
                                         <th>Send Time</th>
                                     </tr>
                                 </thead>
@@ -93,6 +111,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $send->message }}</td>
                                             <td>{{ $send->schedule_id_3 }}</td>
+                                            <td>{{ $send->send_day }}</td>
                                             <td class="border p-1">{{ $send->send_time }}</td>
                                         </tr>
                                     @endforeach
